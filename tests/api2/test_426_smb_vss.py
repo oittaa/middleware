@@ -328,38 +328,3 @@ def test_012_check_previous_versions_of_testfiles_home_share(request, zfs, gmt_d
     err, errstr, msg = check_previous_version_exists(the_file, True)
     assert err == 0, f'{the_file}: {errstr} - {msg}'
 
-
-def test_050_delete_smb_user(request):
-    depends(request, ["VSS_USER_CREATED"])
-    results = DELETE(f"/user/id/{vssuser_id}/", {"delete_group": True})
-    assert results.status_code == 200, results.text
-
-
-def test_051_disable_smb1(request):
-    depends(request, ["VSS_SMB1_ENABLED"])
-    payload = {
-        "enable_smb1": False,
-        "aapl_extensions": False,
-    }
-    results = PUT("/smb/", payload)
-    assert results.status_code == 200, results.text
-
-
-def test_052_stopping_smb_service(request):
-    depends(request, ["VSS_SMB_SERVICE_STARTED"])
-    payload = {"service": "cifs"}
-    results = POST("/service/stop/", payload)
-    assert results.status_code == 200, results.text
-    sleep(1)
-
-
-def test_053_checking_if_smb_is_stoped(request):
-    depends(request, ["VSS_SMB_SERVICE_STARTED"])
-    results = GET("/service?service=cifs")
-    assert results.json()[0]['state'] == "STOPPED", results.text
-
-
-def test_054_destroying_smb_dataset(request):
-    depends(request, ["VSS_DATASET_CREATED"])
-    results = DELETE(f"/pool/dataset/id/{dataset_url}/", {'recursive': True})
-    assert results.status_code == 200, results.text
