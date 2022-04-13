@@ -6,6 +6,7 @@ from .base import SimpleService
 class AFPService(SimpleService):
     name = "afp"
     reloadable = True
+    deprecated = True
 
     etc = ["afpd"]
 
@@ -15,7 +16,6 @@ class AFPService(SimpleService):
 
     async def after_start(self):
         await self.middleware.call("service.reload", "mdns")
-        await self.middleware.call('alert.oneshot_create', 'DeprecatedService', {"service": "AFP"})
 
     async def after_stop(self):
         # when netatalk stops if afpd or cnid_metad is stuck
@@ -25,7 +25,6 @@ class AFPService(SimpleService):
         await run("pkill", "-9", "cnid_metad", check=False)
 
         await self.middleware.call("service.reload", "mdns")
-        await self.middleware.call('alert.oneshot_delete', 'DeprecatedService', "AFP")
 
     async def reload(self):
         await run("killall", "-1", "netatalk", check=False)

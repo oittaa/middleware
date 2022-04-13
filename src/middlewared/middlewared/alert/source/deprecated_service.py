@@ -1,5 +1,5 @@
 import json
-from middlewared.alert.base import AlertClass, SimpleOneShotAlertClass, AlertCategory, AlertLevel, Alert
+from middlewared.alert.base import Alert, AlertClass, SimpleOneShotAlertClass, AlertCategory, AlertLevel
 
 
 class DeprecatedServiceAlertClass(AlertClass, SimpleOneShotAlertClass):
