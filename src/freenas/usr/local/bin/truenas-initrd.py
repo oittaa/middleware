@@ -82,6 +82,7 @@ def update_module_files(root, config):
             "etc/modprobe.d/kvm.conf",
             "etc/modprobe.d/nvidia.conf",
             "etc/modprobe.d/vfio.conf",
+            "etc/modprobe.d/spl.conf",
         ]
     ):
         with contextlib.suppress(Exception):
@@ -114,6 +115,8 @@ def update_module_files(root, config):
     with open(get_path("etc/modprobe.d/vfio.conf"), "w") as f:
         f.write(f"options vfio-pci ids={','.join(pci_ids)}\n")
 
+    with open(get_path("etc/modprobe.d/spl.conf"), "w") as f:
+        f.write("options spl spl_panic_halt=1\n")
 
 def update_initramfs_config(root):
     initramfs_config_path = os.path.join(root, "boot/initramfs_config.json")
